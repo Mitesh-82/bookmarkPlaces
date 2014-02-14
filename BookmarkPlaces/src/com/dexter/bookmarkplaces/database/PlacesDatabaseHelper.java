@@ -25,6 +25,7 @@ public class PlacesDatabaseHelper extends SQLiteOpenHelper {
         // Any other options for the CREATE command
         " )";
 
+	//TODO: Implement Delete Places Table	
 	private static final String SQL_DELETE_PLACESLIST =
 			"DROP TABLE IF EXISTS " + PlacesContract.PlacesList.TABLE_NAME;
 
@@ -38,6 +39,7 @@ public class PlacesDatabaseHelper extends SQLiteOpenHelper {
 
 	}
 
+	//TODO: Implement Upgrade Database handling
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
