@@ -22,14 +22,38 @@ import com.dexter.bookmarkplaces.database.PlacesContract;
 import com.dexter.bookmarkplaces.database.PlacesDatabaseHelper;
 
 
+/**This class takes care of capturing location data from GPS and its relevant data provided by user
+ * @author mitesh.patel
+ * 
+ */
 public class MainActivity extends Activity implements OnClickListener, LocationListener {
 
+	/**Location Manager Object
+	 */
 	private LocationManager locationManager;
+	
+	/**context object to hold the context
+	 */	
 	private Context context;	
+
+	/**
+	 * Location object to hold the last fix location
+	 */
 	private Location lastfixLocation;
+	
+	/**
+	 * Submit button object
+	 */
 	private Button btnSubmit;
+	
+	/**
+	 * edit text object for getting price size and remarks
+	 */
 	private EditText edttextSize, edttextPrice, edttextRemarks;
 
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onCreate(android.os.Bundle)
+	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -46,6 +70,9 @@ public class MainActivity extends Activity implements OnClickListener, LocationL
 		btnSubmit.setOnClickListener(this);
 	}
 
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onCreateOptionsMenu(android.view.Menu)
+	 */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -53,6 +80,9 @@ public class MainActivity extends Activity implements OnClickListener, LocationL
 		return true;
 	}
 
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onResume()
+	 */
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -63,11 +93,18 @@ public class MainActivity extends Activity implements OnClickListener, LocationL
 
 	}
 
+	/**
+	 * Starts GPS
+	 */
 	private void startGPS() {
 		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
 
 	}
 
+	/**
+	 * Check whether GPS is enabled.
+	 * If GPS is not enabled, shows a popup to allow user to enable GPS
+	 */
 	private void isGpsEnabled() {
 		if(!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
 
@@ -99,19 +136,21 @@ public class MainActivity extends Activity implements OnClickListener, LocationL
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see android.view.View.OnClickListener#onClick(android.view.View)
+	 */
 	@Override
 	public void onClick(View v) {
 		if(v == btnSubmit) {
 			if(lastfixLocation != null){
 				saveDatatoDB();
-
-				
 			}
 		}
-
 	}
 	
-	
+	/**
+	 * Save User input data along with user data to PlacesList DB using DB helper
+	 */
 	private void saveDatatoDB() {
 
 		Thread thread = new Thread (new Runnable() {
@@ -140,24 +179,34 @@ public class MainActivity extends Activity implements OnClickListener, LocationL
 		
 		thread.start();		
 	}
-	
-	
 
+	/* (non-Javadoc)
+	 * @see android.location.LocationListener#onLocationChanged(android.location.Location)
+	 */
 	@Override
 	public void onLocationChanged(Location location) {
 		lastfixLocation = location;
 	}
 
+	/* (non-Javadoc)
+	 * @see android.location.LocationListener#onProviderDisabled(java.lang.String)
+	 */
 	@Override
 	public void onProviderDisabled(String provider) {
 
 	}
 
+	/* (non-Javadoc)
+	 * @see android.location.LocationListener#onProviderEnabled(java.lang.String)
+	 */
 	@Override
 	public void onProviderEnabled(String provider) {
 
 	}
 
+	/* (non-Javadoc)
+	 * @see android.location.LocationListener#onStatusChanged(java.lang.String, int, android.os.Bundle)
+	 */
 	@Override
 	public void onStatusChanged(String provider, int status, Bundle extras) {
 	}
