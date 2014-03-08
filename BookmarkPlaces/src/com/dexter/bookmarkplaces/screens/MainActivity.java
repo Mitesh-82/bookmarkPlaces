@@ -21,37 +21,44 @@ import com.dexter.bookmarkplaces.R;
 import com.dexter.bookmarkplaces.database.PlacesContract;
 import com.dexter.bookmarkplaces.database.PlacesDatabaseHelper;
 
-
-/**This class takes care of capturing location data from GPS and its relevant data provided by user
+/**
+ * This class takes care of capturing location data from GPS and its relevant
+ * data provided by user
+ * 
  * @author mitesh.patel
  * 
  */
-public class MainActivity extends Activity implements OnClickListener, LocationListener {
+public class MainActivity extends Activity implements OnClickListener,
+		LocationListener {
 
-	/**Location Manager Object
+	/**
+	 * Location Manager Object
 	 */
 	private LocationManager locationManager;
-	
-	/**context object to hold the context
-	 */	
-	private Context context;	
+
+	/**
+	 * context object to hold the context
+	 */
+	private Context context;
 
 	/**
 	 * Location object to hold the last fix location
 	 */
 	private Location lastfixLocation;
-	
+
 	/**
 	 * Submit button object
 	 */
 	private Button btnSubmit;
-	
+
 	/**
 	 * edit text object for getting price size and remarks
 	 */
 	private EditText edttextSize, edttextPrice, edttextRemarks;
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
 	 */
 	@Override
@@ -66,11 +73,13 @@ public class MainActivity extends Activity implements OnClickListener, LocationL
 		edttextSize = (EditText) findViewById(R.id.editText1);
 		edttextPrice = (EditText) findViewById(R.id.editText2);
 		edttextRemarks = (EditText) findViewById(R.id.editText3);
-		
+
 		btnSubmit.setOnClickListener(this);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see android.app.Activity#onCreateOptionsMenu(android.view.Menu)
 	 */
 	@Override
@@ -80,14 +89,16 @@ public class MainActivity extends Activity implements OnClickListener, LocationL
 		return true;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see android.app.Activity#onResume()
 	 */
 	@Override
 	protected void onResume() {
 		super.onResume();
 
-		//Check for GPS is enabled or not
+		// Check for GPS is enabled or not
 		isGpsEnabled();
 		startGPS();
 
@@ -97,115 +108,144 @@ public class MainActivity extends Activity implements OnClickListener, LocationL
 	 * Starts GPS
 	 */
 	private void startGPS() {
-		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0,
+				0, this);
 
 	}
 
 	/**
-	 * Check whether GPS is enabled.
-	 * If GPS is not enabled, shows a popup to allow user to enable GPS
+	 * Check whether GPS is enabled. If GPS is not enabled, shows a popup to
+	 * allow user to enable GPS
 	 */
 	private void isGpsEnabled() {
-		if(!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+		if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
 
 			AlertDialog.Builder builder = new AlertDialog.Builder(context);
 			builder.setMessage("GPS is not Enabled!\n Go to Settings?")
-			.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+					.setPositiveButton("Yes",
+							new DialogInterface.OnClickListener() {
 
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-					dialog.cancel();
-					startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-					//					dialog.cancel();
-				}
-			})
+								@Override
+								public void onClick(DialogInterface dialog,
+										int which) {
+									dialog.cancel();
+									startActivity(new Intent(
+											android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+									// dialog.cancel();
+								}
+							})
 
-			.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+					.setNegativeButton("Cancel",
+							new DialogInterface.OnClickListener() {
 
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-					Activity activity = (Activity) context;
-					activity.finish();
-					dialog.cancel();
-				}
-			})
+								@Override
+								public void onClick(DialogInterface dialog,
+										int which) {
+									Activity activity = (Activity) context;
+									activity.finish();
+									dialog.cancel();
+								}
+							})
 
-			.setCancelable(false);
+					.setCancelable(false);
 
 			builder.create().show();
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see android.view.View.OnClickListener#onClick(android.view.View)
 	 */
 	@Override
 	public void onClick(View v) {
-		if(v == btnSubmit) {
-			if(lastfixLocation != null){
+		if (v == btnSubmit) {
+			if (lastfixLocation != null) {
 				saveDatatoDB();
 			}
 		}
 	}
-	
+
 	/**
-	 * Save User input data along with user data to PlacesList DB using DB helper
+	 * Save User input data along with user data to PlacesList DB using DB
+	 * helper
 	 */
 	private void saveDatatoDB() {
 
-		Thread thread = new Thread (new Runnable() {
+		Thread thread = new Thread(new Runnable() {
 			@Override
 			public void run() {
 				ContentValues values = new ContentValues();
-				values.put(PlacesContract.PlacesList.COLUMN_NAME_PRICE, edttextPrice.getText().toString());
-				values.put(PlacesContract.PlacesList.COLUMN_NAME_SIZE, edttextSize.getText().toString());
-				values.put(PlacesContract.PlacesList.COLUMN_NAME_REMARKS, edttextRemarks.getText().toString());
-				values.put(PlacesContract.PlacesList.COLUMN_NAME_LATTITUDE, Double.toString(lastfixLocation.getLatitude()));
-				values.put(PlacesContract.PlacesList.COLUMN_NAME_LONGITUDE, Double.toString(lastfixLocation.getLongitude()));
-				values.put(PlacesContract.PlacesList.COLUMN_NAME_ALTITUDE, Double.toString(lastfixLocation.getAltitude()));
-				
-				PlacesDatabaseHelper dbhelper = new PlacesDatabaseHelper(context);
+				values.put(PlacesContract.PlacesList.COLUMN_NAME_PRICE,
+						edttextPrice.getText().toString());
+				values.put(PlacesContract.PlacesList.COLUMN_NAME_SIZE,
+						edttextSize.getText().toString());
+				values.put(PlacesContract.PlacesList.COLUMN_NAME_REMARKS,
+						edttextRemarks.getText().toString());
+				values.put(PlacesContract.PlacesList.COLUMN_NAME_LATTITUDE,
+						Double.toString(lastfixLocation.getLatitude()));
+				values.put(PlacesContract.PlacesList.COLUMN_NAME_LONGITUDE,
+						Double.toString(lastfixLocation.getLongitude()));
+				values.put(PlacesContract.PlacesList.COLUMN_NAME_ALTITUDE,
+						Double.toString(lastfixLocation.getAltitude()));
+
+				PlacesDatabaseHelper dbhelper = new PlacesDatabaseHelper(
+						context);
 				SQLiteDatabase db = dbhelper.getWritableDatabase();
-				
-				edttextPrice.setText("");
-				edttextSize.setText("");
-				edttextRemarks.setText("");
-				
+
+				// edttextPrice.setText("");
+				// edttextSize.setText("");
+				// edttextRemarks.setText("");
+
 				db.insert(PlacesContract.PlacesList.TABLE_NAME, null, values);
 				locationManager.removeUpdates((LocationListener) context);
 				lastfixLocation = null;
 			}
 		});
-		
-		thread.start();		
+
+		thread.start();
 	}
 
-	/* (non-Javadoc)
-	 * @see android.location.LocationListener#onLocationChanged(android.location.Location)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * android.location.LocationListener#onLocationChanged(android.location.
+	 * Location)
 	 */
 	@Override
 	public void onLocationChanged(Location location) {
 		lastfixLocation = location;
 	}
 
-	/* (non-Javadoc)
-	 * @see android.location.LocationListener#onProviderDisabled(java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * android.location.LocationListener#onProviderDisabled(java.lang.String)
 	 */
 	@Override
 	public void onProviderDisabled(String provider) {
 
 	}
 
-	/* (non-Javadoc)
-	 * @see android.location.LocationListener#onProviderEnabled(java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * android.location.LocationListener#onProviderEnabled(java.lang.String)
 	 */
 	@Override
 	public void onProviderEnabled(String provider) {
 
 	}
 
-	/* (non-Javadoc)
-	 * @see android.location.LocationListener#onStatusChanged(java.lang.String, int, android.os.Bundle)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.location.LocationListener#onStatusChanged(java.lang.String,
+	 * int, android.os.Bundle)
 	 */
 	@Override
 	public void onStatusChanged(String provider, int status, Bundle extras) {
