@@ -9,6 +9,7 @@ import android.os.Bundle;
 import com.dexter.bookmarkplaces.R;
 import com.dexter.bookmarkplaces.database.PlacesContract;
 import com.dexter.bookmarkplaces.database.PlacesDatabaseHelper;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.LatLng;
@@ -86,6 +87,12 @@ public class MapActivity extends Activity {
 				googleMap.addMarker(markers[index]);
 				index++;
 			}
+		}
+		
+		
+		//zoom into last marker if available
+		if ((markers != null) && (markers.length > 0)) {
+			googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(markers[index -1].getPosition(), 15));
 		}
 
 		// Marker hamburg = map.addMarker(new MarkerOptions().position(HAMBURG)

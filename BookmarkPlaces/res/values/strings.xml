@@ -4,5 +4,11 @@
     <string name="app_name">BookmarkPlaces</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
+    <string name="size">Size</string>
+    <string name="price">Price</string>
+    <string name="remarks">Remarks</string>
+    <string name="save">Save</string>
+    <string name="title">Title</string>
+    <string name="map_view">Map View</string>
 
 </resources>

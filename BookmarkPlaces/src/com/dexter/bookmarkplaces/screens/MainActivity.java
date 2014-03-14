@@ -54,7 +54,9 @@ public class MainActivity extends Activity implements OnClickListener,
 	/**
 	 * edit text object for getting price size and remarks
 	 */
-	private EditText edttextSize, edttextPrice, edttextRemarks;
+	private EditText edttextTitle, edttextSize, edttextPrice, edttextRemarks;
+
+	private Button btnMapView;
 
 	/*
 	 * (non-Javadoc)
@@ -69,12 +71,15 @@ public class MainActivity extends Activity implements OnClickListener,
 		context = this;
 		locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
-		btnSubmit = (Button) findViewById(R.id.button1);
-		edttextSize = (EditText) findViewById(R.id.editText1);
-		edttextPrice = (EditText) findViewById(R.id.editText2);
-		edttextRemarks = (EditText) findViewById(R.id.editText3);
+		btnSubmit = (Button) findViewById(R.id.buttonSave);
+		edttextTitle = (EditText) findViewById(R.id.editTextTitle);
+		edttextSize = (EditText) findViewById(R.id.editTextSize);
+		edttextPrice = (EditText) findViewById(R.id.editTextPrice);
+		edttextRemarks = (EditText) findViewById(R.id.editTextRemarks);
+		btnMapView = (Button) findViewById(R.id.buttonMapView);
 
 		btnSubmit.setOnClickListener(this);
+		btnMapView.setOnClickListener(this);
 	}
 
 	/*
@@ -164,6 +169,11 @@ public class MainActivity extends Activity implements OnClickListener,
 			if (lastfixLocation != null) {
 				saveDatatoDB();
 			}
+		} else if (v == btnMapView) {
+			Intent intent = new Intent(this,
+					com.dexter.bookmarkplaces.screens.MapActivity.class);
+
+			startActivity(intent);
 		}
 	}
 
@@ -177,6 +187,8 @@ public class MainActivity extends Activity implements OnClickListener,
 			@Override
 			public void run() {
 				ContentValues values = new ContentValues();
+				values.put(PlacesContract.PlacesList.COLUMN_NAME_TITLE,
+						edttextTitle.getText().toString());
 				values.put(PlacesContract.PlacesList.COLUMN_NAME_PRICE,
 						edttextPrice.getText().toString());
 				values.put(PlacesContract.PlacesList.COLUMN_NAME_SIZE,
